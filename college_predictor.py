@@ -38,8 +38,6 @@ def main():
         st.error(f"Missing columns in the uploaded file: {', '.join(missing_columns)}")
         return
 
-    
-
     # Instructions and seat category information
     with st.expander("Instructions"):
         st.markdown("""
@@ -128,6 +126,7 @@ def main():
         - **TFWS**: Tuition Fee Waiver Scheme
         """)
         st.header('Enter Student Details')
+
     # Get sorted unique seat types
     sorted_seat_types = sorted(df['SEAT TYPE'].unique())
     # Multiselect for seat types
@@ -163,7 +162,11 @@ def main():
         'Electronics and Telecommunication', 'Plastic Engineering', 'Mechanical and Automation',
         'Artificial Intelligence and Robotics'
     ]
-
+    
+    # Add "ALL" option and sort alphabetically
+    branches.append("ALL")
+    branches = sorted(branches)
+    
     # Multiselect for branches
     branch = st.multiselect('Select Branch', branches)
 
@@ -174,7 +177,7 @@ def main():
     filtered_data = df[
         (df['SEAT TYPE'].isin(seat_types)) &
         (df['INSTITUTE DISTRICT'].isin(regions if "ALL" not in regions else df['INSTITUTE DISTRICT'])) &
-        (df['BRANCH NAME'].isin(branch))
+        (df['BRANCH NAME'].isin(branch if "ALL" not in branch else df['BRANCH NAME']))
     ]
 
     if percentile:
